@@ -100,3 +100,50 @@ a[b]^=d *)
 
 a[b]
 (* d *)
+
+Clear[a, b, c, d, e];
+a[b][c][d] = e;
+?? a
+(* Global`a
+a[b][c][d]=e
+*)
+?? b
+(* Global`b *)
+?? c
+(* Global`c *)
+?? d
+(* Global`d *)
+?? e
+(* Global`e *)
+SubValues[a]
+(* {HoldPattern[a[b][c][d]] :> e} *)
+
+Clear[a, b, c, d, e];
+a[b][c][d] ^= e; (* With Upset the definition is automatically assigned to 'd' as upvalues i.e. argument at Level 1 *)
+?? a
+(* Global`a *)
+?? b
+(* Global`b *)
+?? c
+(* Global`c *)
+?? d
+(* Global`d 
+a[b][c][d]^=e *)
+
+UpValues[d]
+(* {HoldPattern[a[b][c][d]] :> e} *)
+
+ClearAll[a, b, c, d, e]; (* with Tagset, user can assign definition to 'a' as SubValues or to 'd' as Upvalues *)
+d /: a[b][c][d] = e;
+UpValues[d]
+(* {HoldPattern[a[b][c][d]] :> e} *)
+
+ClearAll[a, b, c, d, e];
+a /: a[b][c][d] = e;
+SubValues[a]
+(* {HoldPattern[a[b][c][d]] :> e} *)
+
+ClearAll[a, b, c, d, e];
+b /: a[b][c][d] = e;
+(* During evaluation of In[321]:= TagSet::tagpos: Tag b in a[b][c][d] is too deep for an assigned rule to be found. *)
+
