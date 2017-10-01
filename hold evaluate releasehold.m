@@ -3,7 +3,7 @@ firstArgHoldingFunction[1 + 1, a + a] (* first argument is not evaluated *)
 (* firstArgHoldingFunction[1 + 1, 2 a] *)
 
 SetAttributes[restArgHoldingFunction, HoldRest];
-restArgHoldingFunction[1 + 1, a + a, b + b] (* only the first is evaluated *)
+restArgHoldingFunction[1 + 1, a + a, b + b] (* only the first argument is evaluated *)
 (* restArgHoldingFunction[2, a + a, b + b] *)
 
 SetAttributes[holdingFunction, HoldAll];
