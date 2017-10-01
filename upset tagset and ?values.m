@@ -222,12 +222,3 @@ n[g][d]=d g n
 *)
 Through[{OwnValues,UpValues,SubValues}[n]]
 (* {{}, {}, {HoldPattern[n[g][d]] :> d g n}} *)
-
-
-
-
-
-
-
-
-
