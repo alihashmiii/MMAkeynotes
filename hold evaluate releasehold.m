@@ -38,3 +38,19 @@ notAHoldingFunction[Hold[1 + 1], ReleaseHold[Hold[a + a]]] (* ReleaseHold will w
 
 ReleaseHold[notAHoldingFunction[Hold[1 + 1 + Hold[a + a]]]] (* works on the top level of the expression with nested Holds *)
 (* notAHoldingFunction[2 + Hold[a + a]] *)
+
+
+(* Sequence[] and Hold *)
+Clear[a,b,g];
+
+Hold[Sequence[a,b]] (* Sequence disappears inside Hold or any function with HoldAll, HoldFirst or HoldRest attribute *)
+(* Hold[a,b] *)
+HoldComplete[Sequence[a,b]] (* Sequence stays inside HoldComplete or a function with HoldAllComplete Attribute *)
+(* HoldComplete[Sequence[a,b]] *)
+Unevaluated[Sequence[a,b]] (* Unevaluated has a HoldAllComplete attribute *)
+(* Unevaluated[Sequence[a,b]] *)
+
+SetAttributes[g,HoldFirst];
+g[g[Sequence[]], g[g[Sequence[]]]] (* Sequence is not automatically flattened when deep inside: notice for both the first and second*)
+(* g[g[Sequence[]], g[g[Sequence[]]]] *)
+
