@@ -61,3 +61,20 @@ With[{expr := a + b + c},
 ]
 (* {6,3} *)
 
+
+
+(* Build up arguments inside of Hold and then apply function at the end *)
+ClearAll[f];
+SetAttributes[f, HoldAll];
+f[iterand_, iterSpecs : {_Symbol, __} ..] := Module[{heldIterSpecs, heldVars, heldVarList},
+  heldIterSpecs = Hold[iterSpecs];
+  heldVars = Replace[heldIterSpecs, {s_Symbol, __} :> s, {1}];
+  heldVarList  = Replace[heldVars, Hold[elems__] :> Hold[{elems}]];
+  Block @@ Append[heldVarList,
+    Unevaluated[Integrate[iterand, iterSpecs]]
+    ]
+  ];
+  {x, y, z} := {Print[1], Print[2], Print[3]};
+  f[x^2 + y^2 + y^2, {x, -1, 1}, {y, -1, 1}, {z, -1, 1}]
+  (* 8 *)
+  
