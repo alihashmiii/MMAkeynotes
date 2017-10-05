@@ -50,3 +50,14 @@ With[{p = 2, a = 2, q = 5, b = 5},
  Function[{p, a, q, b}, DisplayForm@MakeBoxes[p^a*q^b]][2, 2, 5, 5]
  (* \!\(TagBox[RowBox[{SuperscriptBox["2", "2"], " ", SuperscriptBox["5", "5"]}],DisplayForm]\) *)
  
+{a, b, c} = {1, 2, 3};
+With[{a = a, b = b, c = c}, MakeBoxes[a^b + c*a] // DisplayForm]
+(* \!\(TagBox[RowBox[{SuperscriptBox["1", "2"], "+", RowBox[{"3", " ", "1"}]}], DisplayForm]\) *)
+
+(* With expressions can use SetDelayed for the initialization not to evaluate *)
+{a, b, c} = {1, 2, 3};
+With[{expr := a + b + c},
+{expr, Length@Unevaluated[expr]}
+]
+(* {6,3} *)
+
