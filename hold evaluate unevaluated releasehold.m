@@ -72,6 +72,11 @@ List@@(f/@ Unevaluated/@Hold[arg1,arg2,arg3])
 Unevaluated[Print[1]/2^3]
 (* Unevaluated[Print[1]/2^3] *)
 
-(* another case when Unevaluated persists is when it is an argument of a Head that does nothing. List being an inert datatype*)
+(* another case when Unevaluated persists is when it is an argument of a Head that does nothing. List being an inert datatype or
+a symbol with no definition*)
 {1, Unevaluated[2^2]}
 (* {1, Unevaluated[2^2]} *)
+f[Unevaluated[1+0],2]
+(* f[Unevaluated[1+0],2] *)
+
+
