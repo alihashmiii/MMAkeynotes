@@ -60,3 +60,9 @@ Head@Unevaluated[1 + 3.5 + Pi + (3-I)^2] (* Unevaluated is not an actual datatyp
 (* Plus *)
 Head@Hold[1 + 3.5 + Pi + (3-I)^2] (* this does not work because Hold does not vanish *)
 (* Hold *)
+
+(* if the head of an expression is Hold we can Map a function without evaluating the arguments of Hold *)
+List@@(f/@ Unevaluated/@Hold[arg1,arg2,arg3])
+
+(* Unevaluated persists when it is itself the outer argument *)
+Unevaluated[Print[1]/2^3]
