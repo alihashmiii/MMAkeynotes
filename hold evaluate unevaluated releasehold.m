@@ -21,10 +21,13 @@ strongHoldingFunction[Evaluate[1 + 1], Evaluate[a + a]] (* Evaluate does not ope
 (* strongHoldingFunction[Evaluate[1 + 1], Evaluate[a + a]] *)
 
 (* Evaluate does not work if present in deep subexpressions of a held-argument. you can use it only on whole argument*)
-a=3;
+a = 3; b = 5;
 holdingFunction[Evaluate[a], Evaluate[b]^Evaluate[a]]
-Clear[a];
 (* holdingFunction[3, Evaluate[b]^Evaluate[a]] *)
+holdingFunction[Evaluate[a], Evaluate[a^b]]
+(* holdingFunction[3, 243] *)
+Clear[a,b];
+
 
 
 (* ReleaseHold works when expression have the Head Hold or HoldForm *)
