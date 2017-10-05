@@ -31,3 +31,10 @@ held = Hold[Evaluate@FactorInteger[n]];
 (* Hold[{{2,2},{3,3},{5,5},{7,7},{11,11}}] *)
 Replace[held, {p_,a_}:> p^a,{2}]
 (* Hold[{2^2,3^3,5^5,7^7,11^11}] *)
+Replace[%, Hold[{elems___}]:>MakeBoxes[Times@elems,TraditionalForm]]
+(* RowBox[{SuperscriptBox["2", "2"], " ", SuperscriptBox["3", "3"], " ", 
+  SuperscriptBox["5", "5"], " ", SuperscriptBox["7", "7"], " ", 
+  SuperscriptBox["11", "11"]}] *)
+  DisplayForm[%]
+ (* \!\(TagBox[RowBox[{SuperscriptBox["2", "2"], " ", SuperscriptBox["3", "3"], " ", 
+SuperscriptBox["5", "5"], " ", SuperscriptBox["7", "7"], " ",SuperscriptBox["11", "11"]}], DisplayForm]\)
