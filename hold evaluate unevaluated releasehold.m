@@ -54,3 +54,9 @@ SetAttributes[g,HoldFirst];
 g[g[Sequence[]], g[g[Sequence[]]]] (* Sequence is not automatically flattened when deep inside: notice for both the first and second*)
 (* g[g[Sequence[]], g[g[Sequence[]]]] *)
 
+(* Unevaluated *)
+(* unevaluated blocks evaluation of arguments *)
+Head@Unevaluated[1 + 3.5 + Pi + (3-I)^2] (* Unevaluated is not an actual datatype and vanishes once its purpose is fulfilled it is transparent to the outer function *)
+(* Plus *)
+Head@Hold[1 + 3.5 + Pi + (3-I)^2] (* this does not work because Hold does not vanish *)
+(* Hold *)
