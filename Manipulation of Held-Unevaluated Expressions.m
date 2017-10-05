@@ -80,7 +80,7 @@ f[iterand_, iterSpecs : {_Symbol, __} ..] := Module[{heldIterSpecs, heldVars, he
  
  
 
-(* *)
+(* Construct a held result from parts. the arguments will evaluate but the final expression produced is held *)
 Hold[Plus[##]]&[6, 7.5, 8 - 3 I, 4/5]
 (* Hold[6 + 7.5 + (8 - 3 I) + 4/5] *)
 Hold[Set[x,#]]&[77]
