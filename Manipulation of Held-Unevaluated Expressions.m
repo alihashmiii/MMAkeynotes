@@ -88,3 +88,16 @@ Hold[Set[x,#]]&[77]
 Composition[HoldForm, Plus] @@ {6, 7.5, 8 - 3 I, 4/5}
 (* \!\(TagBox[RowBox[{"6", "+", "7.5`", " ", "+", RowBox[{"(", 
 RowBox[{"8", "-", RowBox[{"3", " ", "I"}]}], ")"}], "+", FractionBox["4", "5"]}], HoldForm]\) *)
+
+
+
+(* Wrap everything in a holding wrapper, do manipulations and then use ReleaseHold *)
+atomsHeld = Map[HoldForm, Unevaluated[2^1*3^2*5^3], {-1}, Heads -> True]
+(* Times[Power[2,1],Power[3,2],Power[5,3]] *)
+atomsInvertHead = Thread[atomsHeld, HoldForm[Power]]
+(* Power[Times[2,1],Times[3,2],Times[5,3]] *)
+atomsChangeHead = atomsInvertHead/.HoldForm[Power]-> HoldForm@Plus
+(* Plus[Times[2,1],Times[3,2],Times[5,3]] *)
+ReleaseHold[atomsChangeHead]
+(* 36 *)
+
