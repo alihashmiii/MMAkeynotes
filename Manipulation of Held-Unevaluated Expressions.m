@@ -77,4 +77,14 @@ f[iterand_, iterSpecs : {_Symbol, __} ..] := Module[{heldIterSpecs, heldVars, he
   {x, y, z} := {Print[1], Print[2], Print[3]};
   f[x^2 + y^2 + y^2, {x, -1, 1}, {y, -1, 1}, {z, -1, 1}]
   (* 8 *)
-  
+ 
+ 
+
+(* *)
+Hold[Plus[##]]&[6, 7.5, 8 - 3 I, 4/5]
+(* Hold[6 + 7.5 + (8 - 3 I) + 4/5] *)
+Hold[Set[x,#]]&[77]
+(* Hold[x = 77] *)
+Composition[HoldForm, Plus] @@ {6, 7.5, 8 - 3 I, 4/5}
+(* \!\(TagBox[RowBox[{"6", "+", "7.5`", " ", "+", RowBox[{"(", 
+RowBox[{"8", "-", RowBox[{"3", " ", "I"}]}], ")"}], "+", FractionBox["4", "5"]}], HoldForm]\) *)
