@@ -20,8 +20,9 @@ SetAttributes[strongHoldingFunction, HoldAllComplete];
 strongHoldingFunction[Evaluate[1 + 1], Evaluate[a + a]] (* Evaluate does not operate when attribute is HoldAllComplete *)
 (* strongHoldingFunction[Evaluate[1 + 1], Evaluate[a + a]] *)
 
-(* ReleaseHold works when expression have the Head Hold or HoldForm *)
 
+
+(* ReleaseHold works when expression have the Head Hold or HoldForm *)
 ReleaseHold@holdingFunction[Hold[1 + 1], Hold[a + a]] (* the head Hold from held expression is removed but \
 argument remains unevaluated owing to HoldAll attribute *)
 (* holdingFunction[1 + 1, a + a] *)
@@ -40,6 +41,7 @@ ReleaseHold[notAHoldingFunction[Hold[1 + 1 + Hold[a + a]]]] (* works on the top 
 (* notAHoldingFunction[2 + Hold[a + a]] *)
 
 
+
 (* Sequence[] and Hold *)
 Clear[a,b,g];
 
@@ -54,6 +56,8 @@ SetAttributes[g,HoldFirst];
 g[g[Sequence[]], g[g[Sequence[]]]] (* Sequence is not automatically flattened when deep inside: notice for both the first and second*)
 (* g[g[Sequence[]], g[g[Sequence[]]]] *)
 
+
+
 (* Unevaluated *)
 (* unevaluated blocks evaluation of arguments *)
 Head@Unevaluated[1 + 3.5 + Pi + (3-I)^2] (* Unevaluated is not an actual datatype and vanishes once its purpose is fulfilled it is transparent to the outer function *)
@@ -66,3 +70,8 @@ List@@(f/@ Unevaluated/@Hold[arg1,arg2,arg3])
 
 (* Unevaluated persists when it is itself the outer argument *)
 Unevaluated[Print[1]/2^3]
+(* Unevaluated[Print[1]/2^3] *)
+
+(* another case when Unevaluated persists is when it is an argument of a Head that does nothing. List being an inert datatype*)
+{1, Unevaluated[2^2]}
+(* {1, Unevaluated[2^2]} *)
