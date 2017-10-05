@@ -20,6 +20,11 @@ SetAttributes[strongHoldingFunction, HoldAllComplete];
 strongHoldingFunction[Evaluate[1 + 1], Evaluate[a + a]] (* Evaluate does not operate when attribute is HoldAllComplete *)
 (* strongHoldingFunction[Evaluate[1 + 1], Evaluate[a + a]] *)
 
+(* Evaluate does not work if present in deep subexpressions of a held-argument. you can use it only on whole argument*)
+a=3;
+holdingFunction[Evaluate[a], Evaluate[b]^Evaluate[a]]
+Clear[a];
+(* holdingFunction[3, Evaluate[b]^Evaluate[a]] *)
 
 
 (* ReleaseHold works when expression have the Head Hold or HoldForm *)
