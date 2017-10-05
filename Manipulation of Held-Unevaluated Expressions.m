@@ -18,3 +18,16 @@ Unevaluated[{x*y,u*0*v,1*2*0}]
 
 
 
+(* Replace is one of the easiest methods for transforming a structure *)
+Replace[Hold[1+2, Print[3,4], D[x^2,x]],
+h_[elems___]:> {h,elems},{1}]
+(* Hold[{Plus,1,2},{Print,3,4},{D,x^2,x}] *)
+
+patts = Replace[Unevaluated[{1 + 2, Print[3, 4], D[x^2, x]}], h_[___] :> _h, {1}]
+(* {_Plus, _Print, _D} *)
+
+n = 79301169838123235887500;
+held = Hold[Evaluate@FactorInteger[n]];
+(* Hold[{{2,2},{3,3},{5,5},{7,7},{11,11}}] *)
+Replace[held, {p_,a_}:> p^a,{2}]
+(* Hold[{2^2,3^3,5^5,7^7,11^11}] *)
