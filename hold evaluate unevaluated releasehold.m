@@ -73,10 +73,18 @@ Unevaluated[Print[1]/2^3]
 (* Unevaluated[Print[1]/2^3] *)
 
 (* another case when Unevaluated persists is when it is an argument of a Head that does nothing. List being an inert datatype or
-a symbol with no definition*)
+a symbol with no definition i.e. when no code is invoked to "use it up", Unevaluated just sits there unused *)
 {1, Unevaluated[2^2]}
 (* {1, Unevaluated[2^2]} *)
 f[Unevaluated[1+0],2]
 (* f[Unevaluated[1+0],2] *)
 
-
+(* furthermore, Unevaluated persists if it becomes the head of the expression AFTER evaluation *)
+ToExpression["Unevaluated[1+2]"]
+(* Unevaluated[1+2] *)
+(* In this example the argument's original head is a Function. It yields Unevaluated as head after
+evaluation *)
+Head[Unevaluated[#1 + #2^2]&[77,99] ]
+(* Unevaluated *)
+(* so if i give an argument which, after evaluation will become something whose head is Unevaluated
+- Unevaluated[arg] - it will not work *)
