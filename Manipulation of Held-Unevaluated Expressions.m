@@ -37,4 +37,16 @@ Replace[%, Hold[{elems___}]:>MakeBoxes[Times@elems,TraditionalForm]]
   SuperscriptBox["11", "11"]}] *)
   DisplayForm[%]
  (* \!\(TagBox[RowBox[{SuperscriptBox["2", "2"], " ", SuperscriptBox["3", "3"], " ", 
-SuperscriptBox["5", "5"], " ", SuperscriptBox["7", "7"], " ",SuperscriptBox["11", "11"]}], DisplayForm]\)
+SuperscriptBox["5", "5"], " ", SuperscriptBox["7", "7"], " ",SuperscriptBox["11", "11"]}], DisplayForm]\) *)
+
+
+
+(* Function and With can stuff values into expression including held ones *)
+With[{p = 2, a = 2, q = 5, b = 5},
+ MakeBoxes[p^a*q^b] // DisplayForm
+ ]
+ (* \!\(TagBox[RowBox[{SuperscriptBox["2", "2"], " ", SuperscriptBox["5", "5"]}],DisplayForm]\) *)
+ 
+ Function[{p, a, q, b}, DisplayForm@MakeBoxes[p^a*q^b]][2, 2, 5, 5]
+ (* \!\(TagBox[RowBox[{SuperscriptBox["2", "2"], " ", SuperscriptBox["5", "5"]}],DisplayForm]\) *)
+ 
