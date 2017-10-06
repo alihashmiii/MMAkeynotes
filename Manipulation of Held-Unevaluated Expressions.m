@@ -101,3 +101,10 @@ atomsChangeHead = atomsInvertHead/.HoldForm[Power]-> HoldForm@Plus
 ReleaseHold[atomsChangeHead]
 (* 36 *)
 
+(* A typesetting form that does the same job as above (HoldForm is invisible but boxes around held expressions are visible) *)
+SetAttributes[HoldFormFrame] = HoldAll;
+HoldFormFrame/: MakeBoxes[HoldFormFrame[expr_],fmt_]:= TagBox[FrameBox@MakeBoxes[expr,fmt],HoldFormFrame];
+atomsHeld = Map[HoldFormFrame, Unevaluated[2^1*3^2*5^3],{-1}, Heads -> True];
+Thread[atomsHeld, HoldFormFrame[Power]]/.HoldFormFrame[Power] -> HoldFormFrame[Plus]//DeleteCases[#, HoldFormFrame,{-1},Heads->True]&
+
+
