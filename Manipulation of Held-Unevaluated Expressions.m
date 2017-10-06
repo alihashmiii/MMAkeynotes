@@ -136,3 +136,13 @@ plus/. {Plus -> Symbol["Plus"], Times -> Symbol["Times"]}
 (* Power$9174 Plus$9174 Times$9174 *)
 (* 36 *)
 
+(* if we do not want to manually enter Symbol["Plus"] ... Symbol["Times"] ourself. we can do the following *)
+UndoModuloLocals[sampleSym_Symbol]:= Module[{sampleName,suffix,suffixLen,nameForm},
+sampleName = SymbolName@Unevaluated[sampleSym];
+suffix = StringTake[sampleName, {StringPosition[sampleName, "$"][[-1,1]],-1}];
+suffixLen = StringLength@suffix;
+nameForm = "*"<>suffix;
+s_Symbol :> With[{str = SymbolName@Unevaluated[s]},
+SymbolName@StringDrop[str,-suffixLen]
+]/;StringMatchQ[str,nameForm]
+]
