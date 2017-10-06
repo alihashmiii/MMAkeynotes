@@ -141,10 +141,10 @@ UndoModuloLocals[sampleSym_Symbol]:= Module[{sampleName,suffix,suffixLen,nameFor
 sampleName = SymbolName@Unevaluated[sampleSym];
 suffix = StringTake[sampleName, {StringPosition[sampleName, "$"][[-1,1]],-1}];
 suffixLen = StringLength@suffix;
-nameForm = "*"<>suffix;
+nameForm = "*" <> suffix;
 s_Symbol :> With[{str = SymbolName@Unevaluated[s]},
-SymbolName@StringDrop[str,-suffixLen]
-]/;StringMatchQ[str,nameForm]
+Symbol@StringDrop[str,-suffixLen]/;StringMatchQ[str,nameForm]
+]
 ];
 
 Module[{Power, Plus, Times, thread, plus, expr, sampleSym},
