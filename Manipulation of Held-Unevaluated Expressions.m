@@ -145,4 +145,12 @@ nameForm = "*"<>suffix;
 s_Symbol :> With[{str = SymbolName@Unevaluated[s]},
 SymbolName@StringDrop[str,-suffixLen]
 ]/;StringMatchQ[str,nameForm]
-]
+];
+
+Module[{Power, Plus, Times, thread, plus, expr, sampleSym},
+ expr = 2^1*3^2*5^3;
+ thread = Thread[expr, Power];
+ plus = thread /. Power -> Plus;
+ plus /. UndoModuloLocals[sampleSym]
+ ]
+ (* 36 *)
