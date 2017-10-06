@@ -106,5 +106,33 @@ SetAttributes[HoldFormFrame,HoldAll];
 HoldFormFrame/: MakeBoxes[HoldFormFrame[expr_],fmt_]:= TagBox[FrameBox@MakeBoxes[expr,fmt],HoldFormFrame];
 atomsHeld = Map[HoldFormFrame, Unevaluated[2^1*3^2*5^3],{-1}, Heads -> True];
 Thread[atomsHeld, HoldFormFrame[Power]]/.HoldFormFrame[Power] -> HoldFormFrame[Plus]//DeleteCases[#, HoldFormFrame,{-1},Heads->True]&
+(* 36 *)
 
+
+
+(* Replace function names with temporary dummy symbols *)
+(* taking similar example above *)
+atomsHeld = Unevaluated[2^1*3^2*5^3]/. {Power -> MyPower, Times -> MyTimes}
+(*MyTimes[MyPower[2, 1], MyPower[3, 2], MyPower[5, 3]] *)
+Thread[atomsHeld, MyPower]
+(* MyPower[MyTimes[2, 3, 5], MyTimes[1, 2, 3]] *)
+% /. MyPower -> MyPlus
+(* MyPlus[MyTimes[2, 3, 5], MyTimes[1, 2, 3]] *)
+% /. {MyPlus -> Plus, MyTimes -> Times}
+(* 36 *)
+
+(* a more subtle way to do this using Block or Module *)
+Block[{Power,Times},
+Thread[2^1*3^2*5^3, Power] /. Power -> Plus
+]
+(* 36 *)
+Module[{Power,Plus,Times,thread,plus,expr},
+Print[Power," ",Times," ",Plus];
+expr = 2^1*3^2*5^3;
+thread = Thread[expr, Power];
+plus = thread /. Power -> Plus;
+plus/. {Plus -> Symbol["Plus"], Times -> Symbol["Times"]}
+]
+(* Power$9174 Plus$9174 Times$9174 *)
+(* 36 *)
 
