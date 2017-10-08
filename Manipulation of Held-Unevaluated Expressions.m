@@ -166,3 +166,13 @@ Block[{Integrate, int, y, exp},
  ]
  (* Integrate[x^3+3 x^2 y+3 x y^2+y^3,x] *)
  (* x^4/4 + x^3 y + (3 x^2 y^2)/2 + x y^3 *)
+
+
+
+(* ParsedForm  *)
+Attributes[ParsedForm] = HoldAll;
+Format[ParsedForm[expr_]] := HoldForm[FullForm@expr];
+ParsedForm[Tan[5.] Sin[6. Pi]]
+(* \!\(TagBox[TagBox[StyleBox[RowBox[{"Times", "[",RowBox[{RowBox[{"Tan", "[", "5.`", "]"}], ",", RowBox[{"Sin", "[",
+RowBox[{"Times", "[", RowBox[{"6.`", ",", "Pi"}], "]"}], "]"}]}], "]"}], ShowSpecialCharacters->False,ShowStringCharacters->True,
+NumberMarks->True],FullForm], HoldForm]\) *)
