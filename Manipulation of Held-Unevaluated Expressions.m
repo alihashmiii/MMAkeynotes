@@ -176,3 +176,21 @@ ParsedForm[Tan[5.] Sin[6. Pi]]
 (* \!\(TagBox[TagBox[StyleBox[RowBox[{"Times", "[",RowBox[{RowBox[{"Tan", "[", "5.`", "]"}], ",", RowBox[{"Sin", "[",
 RowBox[{"Times", "[", RowBox[{"6.`", ",", "Pi"}], "]"}], "]"}]}], "]"}], ShowSpecialCharacters->False,ShowStringCharacters->True,
 NumberMarks->True],FullForm], HoldForm]\) *)
+
+
+
+(* we can use HoldForm to see how automatic renaming of the inner construct's local variables may occur in nested scoping constructs *)
+With[{a=3},HoldForm@Module[{x},x+a]]
+(* Module[{x$}, x$ +3] *)
+Module[{a = 0}, HoldForm@Compile[{x,y}, a x + y]]
+(* Compile[{x$,y$}, a$6234 x$ + y$] *)
+x = 2; y = 6;
+Function[a,HoldForm[f[x_,y_] = a x + y]][7]
+(* f[x$_, y$_] = 7 x$ + y$ *)
+
+(* Block does not participate in these lexical scoping activities. If inside, its variables are not renamed *)
+Module[{a = 0}, HoldForm@Block[{x,y}, a x + y]]
+(* Block[{x,y}, a$6235 x + y] *)
+(* If outside, then it does not rename the construct inside *)
+Block[{a=0}, HoldForm@Module[{x,y}, a x + y]]
+(* Module[{x,y}, a x + y] *)
