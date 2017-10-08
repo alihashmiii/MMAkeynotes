@@ -154,3 +154,15 @@ Module[{Power, Plus, Times, thread, plus, expr, sampleSym},
  plus /. UndoModuloLocals[sampleSym]
  ]
  (* 36 *)
+
+
+
+(* Block to temporarily nullify built-in or user-defined functions *)
+Block[{Integrate, int, y, exp},
+ int = Integrate[(x + y)^3, x];
+ exp = Map[Expand, int, 1];
+ Print[exp];
+ exp
+ ]
+ (* Integrate[x^3+3 x^2 y+3 x y^2+y^3,x] *)
+ (* x^4/4 + x^3 y + (3 x^2 y^2)/2 + x y^3 *)
