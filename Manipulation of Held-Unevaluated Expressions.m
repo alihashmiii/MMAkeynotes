@@ -169,7 +169,7 @@ Block[{Integrate, int, y, exp},
 
 
 
-(* ParsedForm  *)
+(* ParsedForm: to check the FullForm of an expression before the argument evaluates  *)
 Attributes[ParsedForm] = HoldAll;
 Format[ParsedForm[expr_]] := HoldForm[FullForm@expr];
 ParsedForm[Tan[5.] Sin[6. Pi]]
