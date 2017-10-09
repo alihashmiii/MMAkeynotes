@@ -31,3 +31,7 @@ f[f[1, 2, 3], f[4], f[6^5, f[7, 8, 9]]]
 (* $IterationLimit::itlim: Iteration limit of 4096 exceeded.
 Hold[f[1, 2, 3, 4, 6^5, 7, 8, 9]]
 *)
+f[1]
+(* $IterationLimit::itlim: Iteration limit of 4096 exceeded. 
+Hold[f[1]]
+*)
