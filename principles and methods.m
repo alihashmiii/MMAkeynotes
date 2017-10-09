@@ -17,8 +17,17 @@ f[elems___]:= Hold[elems];
 f[f[1, 2, 3], f[4], f[6^5, f[7, 8, 9]]] 
 (* Hold[1, 2, 3, 4, 6^5, 7, 8, 9] *)
 
-(* one can do something similar with using Attributes *)
+(* one can do something similar with only using Attributes *)
 ClearAll[f];
 Attributes[f] = {HoldAll,Flat};
 f[f[1, 2, 3], f[4], f[6^5, f[7, 8, 9]]]
 (* f[1, 2, 3, 4, 6^5, 7, 8, 9] *)
+
+(* However, if we define patterns we will get into infinite recursion issues since Flat affects pattern matching *)
+ClearAll[f]; Attributes[f] = {HoldAll, Flat};
+f[singleton_] := singleton;
+f[elems___] := Hold[elems];
+f[f[1, 2, 3], f[4], f[6^5, f[7, 8, 9]]]
+(* $IterationLimit::itlim: Iteration limit of 4096 exceeded.
+Hold[f[1, 2, 3, 4, 6^5, 7, 8, 9]]
+*)
