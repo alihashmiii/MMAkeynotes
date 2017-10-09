@@ -14,6 +14,11 @@ SetAttributes[f, HoldAll];
 f[args___] /; MemberQ[Unevaluated[{args}], _f] := Flatten[Unevaluated[f[args]], Infinity, f];
 f[singleton_] := singleton;
 f[elems___]:= Hold[elems];
-
 f[f[1, 2, 3], f[4], f[6^5, f[7, 8, 9]]] 
 (* Hold[1, 2, 3, 4, 6^5, 7, 8, 9] *)
+
+(* one can do something similar with using Attributes *)
+ClearAll[f];
+Attributes[f] = {HoldAll,Flat};
+f[f[1, 2, 3], f[4], f[6^5, f[7, 8, 9]]]
+(* f[1, 2, 3, 4, 6^5, 7, 8, 9] *)
