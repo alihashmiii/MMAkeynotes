@@ -261,13 +261,43 @@ f[n_] := n;
 f[1][x_] := x^2;
 (* SetDelayed::write: Tag Integer in 1[x_] is Protected.  *)
 
+
+(* For SubValues only the innermost argument is Held unevaluated *)
 SetAttributes[g, HoldAll];
 g[x_][y_] := {Head@Unevaluated[x], Head@Unevaluated[y]};
 g[Print[2]][Print[3]]
 (* 3
 {Print, Symbol} *)
 
+(* The only way to prevent evaluation of all the arguments for SubValues is to encapsulate the first  unevaluated argument
+in a Function with attributes of HoldAll *)
+
 SetAttributes[g, HoldAll];
 g[x_] := Function[y, {Head@Unevaluated[x], Head@Unevaluated[y]}, HoldAll];
 g[Print[2]][Print[3]]
 (* {Print, Print} *)
+
+ClearAll["Global`*"];
+f[x_] := x^2;
+g/:f[g[x_]] := g[Sin[x]];
+g[x_] := Cos[x];
+
+f[g[y]] (* with Standard evaluation of arguments the heads and parts of the expression will be evaluated first. 
+f[g[y]] -> f[Cos[y]] -> Cos[y]^2  *)
+(* Cos[y]^2 *)
+f[Unevaluated@g[y]] (* by forcing non-standard evaluation with Unevaluated the DownValues {HoldPattern[g[y_]]:>Cos[x]} will
+not be applied first and the UpValues g/:f[g[x_]]:= g[Sin[x]] will be applied instead. This will change from g[Sin[x]] to Cos[Sin[x]]*)
+(* Cos[Sin[y]] *)
+
+(* The only way to prevent evaluation of an UpValue inside a 'Held' head is to use HoldComplete as the head or
+define a function with HoldAllComplete Attribute *)
+
+ClearAll[ff];
+ff /: h_[ff[x_]] := Print["Evaluated"];
+Hold[ff[1]]
+(*Evaluated*)
+HoldComplete[ff[1]]
+(* HoldComplete[ff[1]] *)
+
+
+
