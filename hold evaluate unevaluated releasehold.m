@@ -96,3 +96,14 @@ Head[Unevaluated[#1 + #2^2]&[77,99] ]
 (* Unevaluated *)
 (* so if i give an argument which, after evaluation will become something whose head is Unevaluated
 - Unevaluated[arg] - it will not work *)
+
+(* Expressions where an upvalue is defined for a symbol inside 'Hold' will be evaluated *)
+ClearAll["Global`*"];
+f[x_]:= Print["Evaluated"];
+Hold[f[1]]
+(* "Evaluated" *)
+f/: h_[ff[x_]]:= Print["Evaluated"];
+Hold[ff[1]]
+(* "Evaluated" *)
+
+
