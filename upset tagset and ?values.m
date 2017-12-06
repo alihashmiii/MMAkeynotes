@@ -222,3 +222,52 @@ n[g][d]=d g n
 *)
 Through[{OwnValues,UpValues,SubValues}[n]]
 (* {{}, {}, {HoldPattern[n[g][d]] :> d g n}} *)
+
+
+(* From Leonid Shifrin's answer *)
+ClearAll[f];
+SetAttributes[f,{Orderless,SequenceHold}];
+f=h;
+f[5,4,2,1,3]
+(* h[5,4,3,2,1] *)
+f[Sequence[2,3,1]]
+(* h[2,3,1] *)
+
+(* SEQUENCE OF DEFINITION OF OWNVALUES AND DOWNVALUES CAN PRODUCE DIFFERENT RESULTS *)
+
+ClearAll["Global`*"];
+g[x_]:=x^2; (* g[5] gets transfored to h[5] because of OwnValues associated with g. Since h[5] is not defined h[5] remains 
+unevaluated *)
+g = h;
+g[5]
+(* h[5] *)
+
+ClearAll["Global`*"]; (* if OwnValues are defined first then during evaluation of Downvalues, g is replaced by h
+and the second pattern becomes h[x_]:=x^2.     g[5] gets transformed to h[5] and then to 25 *)
+g = h;
+g[x_]:= x^2;
+g[5]
+(* 25 *)
+
+(* DOWNVALUES ARE APPLIED BEFORE SUBVALUES *)
+ClearAll["Global`*"];
+f[1][x_] := x^2;
+f[n_]:=n;
+f[1][3]
+(* 1[3] *)
+
+ClearAll["Global`*"]; (* this definition will not work because *)
+f[n_] := n;
+f[1][x_] := x^2;
+(* SetDelayed::write: Tag Integer in 1[x_] is Protected.  *)
+
+SetAttributes[g, HoldAll];
+g[x_][y_] := {Head@Unevaluated[x], Head@Unevaluated[y]};
+g[Print[2]][Print[3]]
+(* 3
+{Print, Symbol} *)
+
+SetAttributes[g, HoldAll];
+g[x_] := Function[y, {Head@Unevaluated[x], Head@Unevaluated[y]}, HoldAll];
+g[Print[2]][Print[3]]
+(* {Print, Print} *)
