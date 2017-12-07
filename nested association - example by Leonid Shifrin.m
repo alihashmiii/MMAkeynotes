@@ -24,7 +24,7 @@ groupByFunc[{keyPath__}]:= With[{keys = Sequence @@ Map[keyWrap, {keyPath}]},
    ];
 
 
-(* we compose groupByFunc with Map in a recursive manner below. This enables groupByFunc's result to map
+(* we do a functional composition of groupByFunc with Map in a recursive manner below. This enables groupByFunc's result to map
 on a deeper level after each nesting *)
 multiGroupBy[{}] := Identity;
 multiGroupBy[specs : {_List ..}] := Map[multiGroupBy[Rest@specs]]@*groupByFunc[First@specs];
