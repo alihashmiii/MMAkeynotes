@@ -23,10 +23,13 @@ groupByFunc[{keyPath__}]:= With[{keys = Sequence @@ Map[keyWrap, {keyPath}]},
     GroupBy[Part[#, keys] &]
    ];
 
-multiGroupBy[{}] := Identity;
-multiGroupBy[specs : {_List ..}] := Map[multiGroupBy[Rest@specs]]@*groupByFunc[First@specs]
 
-transform = multiGroupBy[{{"date", 1}, {"date", 2}, {"company"}}]
+(* we compose groupByFunc with Map in a recursive manner below. This enables groupByFunc's result to map
+on a deeper level after each nesting *)
+multiGroupBy[{}] := Identity;
+multiGroupBy[specs : {_List ..}] := Map[multiGroupBy[Rest@specs]]@*groupByFunc[First@specs];
+
+transform = multiGroupBy[{{"date", 1}, {"date", 2}, {"company"}}]; (* this produces groupByFunc which is mapped over the  *)
 
 transform[data]
 (* <|2013 -> <|12 -> <|"AAPL" -> {<|"company" -> "AAPL", 
