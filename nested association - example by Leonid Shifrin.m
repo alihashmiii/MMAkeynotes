@@ -12,8 +12,8 @@ data = {<|"company" -> "AAPL", "date" -> {2013, 12, 26}, "open" -> 80.2231|>, <|
     "company" -> "GE", "date" -> {2013, 12, 31}, "open" -> 27.4322|>, <|"company" -> "GE", "date" -> {2014, 1, 2}, 
     "open" -> 27.394|>, <|"company" -> "GE", "date" -> {2014, 1, 3}, "open" -> 27.0593|>};
 
-(* lets create a nested Association from this data structure (List of Associations to Nested Associations) from user specified preferences
- i.e. {{"date",1},{"date",2},{"company"}} *)
+(* lets create a nested Association from this data structure (List of Associations to Nested Associations) from user specified
+preferences  i.e. {{"date",1},{"date",2},{"company"}} *)
  
 keyWrap[x_Integer] := x;
 keyWrap[x_String] := Key[x];
@@ -63,4 +63,21 @@ transform[data]
         "date" -> {2014, 1, 3}, "open" -> 36.6658|>}, 
      "GE" -> {<|"company" -> "GE", "date" -> {2014, 1, 2}, 
         "open" -> 27.394|>, <|"company" -> "GE", 
-        "date" -> {2014, 1, 3}, "open" -> 27.0593|>}|>|>|> *)
+        "date" -> {2014, 1, 3}, "open" -> 27.0593|>}|>|>|> *);
+        
+(* NOW TO MAKE QUERY INTO THE NESTED ASSOCIATION *);
+
+query[specs: {(_List|All)..}]:=Composition[Map[query[Rest@specs]],With[{curr = First@specs}, If[curr===All, # &, Part[#,Key/@curr]&]]]; 
+
+q = query[{{2013}, All, {"AAPL", "MSFT"}}];
+q[nested]
+
+(* <|2013 -> <|12 -> <|"AAPL" -> {<|"company" -> "AAPL", "date" -> {2013, 12, 26}, "open" -> 80.2231|>, 
+<|"company" -> "AAPL", "date" -> {2013, 12, 27}, "open" -> 79.6268|>, 
+<|"company" -> "AAPL", "date" -> {2013, 12, 30}, "open" -> 78.7252|>,
+<|"company" -> "AAPL", "date" -> {2013, 12, 31}, "open" -> 78.2626|>}, 
+"MSFT" -> {<|"company" -> "MSFT", "date" -> {2013, 12, 26}, "open" -> 36.6635|>,
+<|"company" -> "MSFT", "date" -> {2013, 12, 27}, "open" -> 37.0358|>,
+<|"company" -> "MSFT", "date" -> {2013, 12, 30}, "open" -> 36.681|>,
+<|"company" -> "MSFT", "date" -> {2013, 12, 31}, "open" -> 36.8601|>}|>|>|> *)
+
