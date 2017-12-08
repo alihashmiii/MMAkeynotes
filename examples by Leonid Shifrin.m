@@ -83,3 +83,33 @@ q[nested]
 <|"company" -> "MSFT", "date" -> {2013, 12, 30}, "open" -> 36.681|>,
 <|"company" -> "MSFT", "date" -> {2013, 12, 31}, "open" -> 36.8601|>}|>|>|> *)
 
+
+
+
+
+(* ---------------------------------- MEMOIZATION WITH PURE FUNCTIONS --------------------------- *)
+
+SetAttributes[makeMemoPureFunc,HoldFirst];
+makeMemoPureFunc[body_,start_: <||>]:= Module[{assoc = start},
+    Function[
+         If[KeyExistsQ[assoc, #], assoc[#], assoc[#] = body]
+        ]
+    ];
+    
+ff = makeMemoPureFunc[If[#>0, 1, 2]]
+(* If[KeyExistsQ[fn$11658, #1], fn$11658[#1], 
+  fn$11658[#1] = If[#1 > 0, 1, 2]] & *)
+  
+{ff[0], ff[1]}
+(* {2,1} *)
+
+OwnValues[fn$11658] (* values are garbage-collected at the end of execution. So we can access stored values using OwnValues *)
+(* {HoldPattern[fn$11658] :> <|0 -> 2, 1 -> 1|>} *)
+
+makeMemoPureFunc[#0[# - 1] + #0[# - 2], <|0 -> 1, 1 -> 1|>] (* here we generate the first 30 fibonacci numbers in a fast way. 
+thanks to Memoization. #0 is calling the function recursively after we define the function body. Neat trick ! *)
+
+
+
+
+
