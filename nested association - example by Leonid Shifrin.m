@@ -66,7 +66,7 @@ transform[data]
         "date" -> {2014, 1, 3}, "open" -> 27.0593|>}|>|>|> *);
         
 (* NOW TO MAKE QUERY INTO THE NESTED ASSOCIATION *);
-
+query[{}] = Identity; (*not necessary to add this *)
 query[specs: {(_List|All)..}]:=Composition[Map[query[Rest@specs]],With[{curr = First@specs}, If[curr===All, # &, Part[#,Key/@curr]&]]]; 
 
 q = query[{{2013}, All, {"AAPL", "MSFT"}}];
