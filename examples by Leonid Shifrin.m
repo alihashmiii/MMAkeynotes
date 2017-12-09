@@ -110,6 +110,26 @@ makeMemoPureFunc[#0[# - 1] + #0[# - 2], <|0 -> 1, 1 -> 1|>] (* here we generate 
 thanks to Memoization. #0 is calling the function recursively after we define the function body. Neat trick ! *)
 
 
+(* lets make a cached version of a memoized function *)
 
+assocShrink[a_Association, cacheLimit_] /; Length[a] > cacheLimit := 
+  Drop[a, Length[a] - cacheLimit];
+assocShrink[a_Association, _] := a;
+
+SetAttributes[cachedMemoPureFunc, HoldFirst];
+cachedMemoPureFunc[body_, start_: <||>, cacheLimit_: Infinity] := 
+ Module[{fn = start},
+  Function[
+   If[
+    KeyExistsQ[fn, #], fn[#], fn = assocShrink[fn, cacheLimit];
+    fn[#] = body
+    ]
+   ]
+  ];
+  
+  f = cachedMemoPureFunc[#0[# - 1] + #0[# - 2], <|0 -> 1, 1 -> 1|>];
+  f/@ Range[500] // Short
+  (* {"1", "2", <<497>>, "225591516161936330872512695036072072046011324913758190588638866418474627738686883405015987052796968498626"} *)
+ 
 
 
