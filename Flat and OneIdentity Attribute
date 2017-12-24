@@ -82,9 +82,20 @@ f[a,b,c]/. f[a,z___] :> {z}
 (* {b,c} *)
 
 
+(* For a Flat function f that is not OneIdentity, when f[x_] is compared with f[expr], the pattern
+matcher will attempt to bind x_ with f[expr] first, and only if that fails to expr: *)
+ClearAll["Global`*"];
+SetAttributes[f,Flat];
+f[3] /. f[z_] /; IntegerQ[Echo@z] :> z
+>> f[3]
+>> 3
+(* 3 *)
 
-
-
+ClearAll["Global`*"];
+SetAttributes[f, {Flat,OneIdentity}];
+f[3]/. f[z_]/; IntegerQ[Echo@z] :> z
+>> 3
+(* 3 *)
 
 
 
