@@ -1,1 +1,25 @@
+SetAttributes[f, Flat];
+f[f[a, b], f[c, f[d, e]]]
+(* f[a, b, c, d, e] *)
+
+Attributes[Plus]
+(* {Flat, Listable, NumericFunction, OneIdentity, Orderless, Protected} *)
+a + b + c /. x_ + y_ :> {x, y}
+(* {a, b + c} *)
+
+ClearAll["Global`*"]
+SetAttributes[f, Flat];
+f[a, b, c, d, e] /. f[b, c, d] -> x
+(* f[a, x, e] *)
+
+f[a, b, c, d, e] /. f[b, c, d] -> f[x, y]
+(* f[a, x, y, e] *)
+
+f[a, b, c, d, e] /. f[b] -> x
+(* f[a, x, c, d, e] *)
+
+ClearAll["Global`*"]
+SetAttributes[f, {Flat, Orderless}];
+f[a, b, c, d, e] /. f[d, b] -> x
+(* f[a, c, e, x] *)
 
