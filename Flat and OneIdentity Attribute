@@ -1,11 +1,17 @@
+
+(* Flat causes the functions to flatten out *)
 SetAttributes[f, Flat];
 f[f[a, b], f[c, f[d, e]]]
 (* f[a, b, c, d, e] *)
 
+(* Flat allows the pattern matcher to use Associativity*)
 Attributes[Plus]
 (* {Flat, Listable, NumericFunction, OneIdentity, Orderless, Protected} *)
 a + b + c /. x_ + y_ :> {x, y}
 (* {a, b + c} *)
+
+
+(*In pattern matching Flat allows sequence of elements to be replaced *)
 
 ClearAll["Global`*"]
 SetAttributes[f, Flat];
@@ -18,8 +24,72 @@ f[a, b, c, d, e] /. f[b, c, d] -> f[x, y]
 f[a, b, c, d, e] /. f[b] -> x
 (* f[a, x, c, d, e] *)
 
+(* For Flat and Orderless attributes any subset of arguments can match *)
 ClearAll["Global`*"]
 SetAttributes[f, {Flat, Orderless}];
 f[a, b, c, d, e] /. f[d, b] -> x
 (* f[a, c, e, x] *)
+
+(* Nested expressions with flat functions are automatically flattened *)
+ClearAll["Global`*"]
+f[f[a, b], f[c, f[d, e]]]
+(* f[f[a, b], f[c, f[d, e]]] *)
+Flatten[%]
+(* f[a, b, c, d, e] *)
+
+SetAttributes[g, Flat]
+g[g[a, b], g[c, g[d, e]]]
+(* g[a, b, c, d, e] *)
+
+(* For flat functions a definition for the two-argument case is normally sufficient *)
+
+ClearAll["Global`*"];
+SetAttributes[g, Flat];
+g[x_, y_] := x + y
+g[a, b, c, d]
+(* g[a] + g[b] + g[c] + g[d] *)
+
+(* If OneIdentity is also provided as an attribute then f[a_] will be matched to a_ *)
+ClearAll["Global`*"];
+SetAttributes[g, {Flat,OneIdentity}];
+g[x_,y_] := {x,y};
+g[a,b,c,d]
+(* a + b + c + d *)
+
+
+(*an expression with a flat head is considered matched in its entirety when any sequence is matched*)
+ClearAll["Global`*"];
+a + b + Sin[a + b] /. a + b -> 5
+(* 5 + Sin[a + b] *)
+(* compare with non-Flat functions *)
+{a + b, Sin[a + b]} /. a + b -> 5
+(* {5, Sin[5]} *)
+(*ReplaceRepeated may be helpful in ensuring all occurences are replaced*)
+a + b + Sin[a+b]//. a + b -> 5
+(* 5 + Sin[5] *)
+
+(*When Blank matches a sequence inside a Flat function f, it will maintain the head f: *)
+SetAttributes[f,Flat];
+f[a,b,c]/. f[a,x_] :> {x}
+(* {f[b,c]} *)
+f[a,b,c]/. f[x_]:> {x}
+(* {f[a,b,c]} *)
+
+(* Sequential patterns like BlankSequence and BlankNullSequence are not affected by Flat *)
+f[a,b,c]/. f[a,z__] :> {z}
+(* {b,c} *)
+f[a,b,c]/. f[a,z___] :> {z}
+(* {b,c} *)
+
+
+
+
+
+
+
+
+
+
+
+
 
