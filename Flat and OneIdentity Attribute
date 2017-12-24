@@ -98,9 +98,21 @@ f[3]/. f[z_]/; IntegerQ[Echo@z] :> z
 (* 3 *)
 
 
+(* For flat and orderless functions, pattern-matching may try a lot of cases  *)
+ClearAll["Global`*"]
+SetAttributes[f, {Flat, OneIdentity, Orderless}];
+ReplaceList[f[a, b, c, d], f[x_, y_] :> {x, y}]
+(* {{a, f[b, c, d]}, {b, f[a, c, d]}, {c, f[a, b, d]}, {d, f[a, b, c]}, {f[a, b], f[c, d]}, {f[a, c], f[b, d]},
+{f[a, d], f[b, c]}, {f[b, c], f[a, d]}, {f[b, d], f[a, c]}, {f[c, d], f[a, b]}, {f[a, b, c], d}, {f[a, b, d], c},
+{f[a, c, d], b}, {f[b, c, d], a}} *)
 
 
-
-
+(* Longest can be used to prevent matches for smaller subexpressions *)
+ClearAll["Global`*"];
+SetAttributes[f, {Flat, OneIdentity}];
+Replace[f[a,b,c,d], f[x_,y__,z_]:> {y}]
+(* {b} *)
+Replace[f[a, b, c, d], f[x_, Longest[y__], z_] :> {y}]
+(* {b,c} *)
 
 
