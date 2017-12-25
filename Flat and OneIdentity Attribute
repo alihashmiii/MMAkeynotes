@@ -1,3 +1,4 @@
+###### Flat Attribute ##### (from Wolfram Documentation)
 
 (* Flat causes the functions to flatten out *)
 SetAttributes[f, Flat];
@@ -142,6 +143,46 @@ Replace[a+b+c, Plus[a,x__Symbol]:> Plus[x]]
 
 
 
+##### ONEIDENTITY ##### (from Wolfram Documentation)
+(*The following pattern matches because Times has an attribute of OneIdentity *)
+MatchQ[x, Times[n_.,x_] ]
+(* True *)
 
+(* any function with an attribute of OneIdentity will match *)
+ClearAll["Global`*"];
+SetAttributes[f, OneIdentity]
+MatchQ[a, f[x_: 0, y_]]
+(* True *)
 
+(* OneIdentity allows defaults to apply to expressions that do not involve Times at all: *)
+{x, 2 x, - x}/. (n_. x) :> y^n
+(* {y, y^2, 1/y} *)
 
+(* For Flat functions, any sequence of arguments will match Blank: *)
+SetAttributes[f, Flat];
+{f[a], f[b, c]}/. f[x_] :> x
+(* { f[a], f[b,c] } *)
+
+(* When f is both Flat and OneIdentity, f[x_] will attempt to match x_ to a rather than f[a]: *)
+ClearAll["Global`*"];
+SetAttributes[f, {Flat, OneIdentity}];
+{f[a], f[b, c]} /. f[x_] :> x
+(* {a, f[b, c]} *)
+
+(* In order for f[a] to match a, you must use a pattern that includes Optional: *)
+ClearAll["Global`*"];
+SetAttributes[f, OneIdentity];
+MatchQ[x, f[_]]
+(* False *)
+
+MatchQ[x,f[_:0]]
+(* True *)
+
+(* Similarly, the following pattern fails because f has no defined defaults: *)
+MatchQ[x,f[_.]]
+(* False *)
+
+(* Defining a default will resolve this issue: *)
+Default[f] = 1;
+MatchQ[x, f[_.]]
+(* True *)
