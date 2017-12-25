@@ -115,4 +115,33 @@ Replace[f[a,b,c,d], f[x_,y__,z_]:> {y}]
 Replace[f[a, b, c, d], f[x_, Longest[y__], z_] :> {y}]
 (* {b,c} *)
 
+(* for a Flat function f[_] matches f with more than one argument *)
+SetAttributes[f, Flat]
+MatchQ[f[1, 2], f[_]]
+(* True *)
+
+(* Repeated can be used as a pattern that only matches a single argument, even inside a Flat function  *)
+MatchQ[f[1,2], f[Repeated[_,{1}]]]
+(* False *)
+
+(* Replace may behave unexpectedly because x_ matches together with the head of a flat function *)
+Replace[a+b+c, Plus[a,x_]:> x]
+(* b+c *)
+
+(* The following restriction works because x_Plus matches Plus[b,c]: *)
+Replace[a+b+c, Plus[a,x_Plus] :> x]
+(* b+c *)
+
+(* However, this one will fail because x_ cannot have both head Plus and Symbol: *)
+Replace[a+b+c, Plus[a,x_Symbol] :> x]
+(* a+b+c *)
+
+(* using BlankSequence in such cases produces a more consistent result *)
+Replace[a+b+c, Plus[a,x__Symbol]:> Plus[x]]
+(* b+c *)
+
+
+
+
+
 
