@@ -141,6 +141,16 @@ Replace[a+b+c, Plus[a,x_Symbol] :> x]
 Replace[a+b+c, Plus[a,x__Symbol]:> Plus[x]]
 (* b+c *)
 
+SetAttributes[f, {Flat}];
+f[a, b, c] /. f[a, x_f] :> x
+(* f[b, c] *)
+Replace[f[a, b, c], f[a, x_f] :> x]
+(* f[b, c] *)
+
+f[a, b, c] /. f[a, x__Symbol] :> x
+(* Sequence[b, c] *)
+Replace[f[a, b, c], f[a, x__Symbol] :> x]
+(* Sequence[b, c] *)
 
 
 ##### ONEIDENTITY ##### (from Wolfram Documentation)
